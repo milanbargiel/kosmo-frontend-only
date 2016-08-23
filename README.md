@@ -1,0 +1,2 @@
+# kosmo
+Bachelor Thesis
