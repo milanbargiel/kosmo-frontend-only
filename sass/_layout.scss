@@ -1,0 +1,26 @@
+/* Setting up Susy
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+@include border-box-sizing;
+
+$susy: (
+	math: static,
+	columns: 12,
+	column-width: 6rem,
+	global-box-sizing: border-box,
+	use-custom: (rem: true),
+	gutters: 2/3,
+	gutter-position: split,
+	);
+
+/* NOTE
+html is set to 62.5% so that all the REM measurements
+are based on 10px sizing. So basically 2.0rem = 20px :) */
+html {
+	font-size: 62.5%;
+}
+body {
+	background-color: $background-color;
+	font-size: $font-size;
+	font-weight: 400;
+	font-family: "Open Sans", sans-serif;
+}

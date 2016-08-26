@@ -1,0 +1,128 @@
+@charset "UTF-8";
+/* Load Sass environment
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+html {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+q, blockquote {
+  quotes: none;
+}
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+a img {
+  border: none;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+  display: block;
+}
+
+/* Measures
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+/* Colors
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+/* Baseline
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+/* Setting up Susy
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+/* NOTE
+html is set to 62.5% so that all the REM measurements
+are based on 10px sizing. So basically 2.0rem = 20px :) */
+html {
+  font-size: 62.5%;
+}
+
+body {
+  background-color: #F2F2F2;
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-family: "Open Sans", sans-serif;
+}
+
+.container {
+  width: 120rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+.container:after {
+  content: " ";
+  display: block;
+  clear: both;
+}
+
+.tag-cloud {
+  width: 16rem;
+  float: left;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  background-color: #71dad2;
+}
+
+.planet {
+  width: 66rem;
+  float: left;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  background-color: #fae7b3;
+}
+
+.thought {
+  width: 26rem;
+  float: right;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  background-color: #ee9e9c;
+  text-align: center;
+}
+
+p {
+  margin-bottom: 20px;
+}
+
+.btn {
+  margin-bottom: 20px;
+}
