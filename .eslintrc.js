@@ -3,7 +3,8 @@ module.exports = {
         "browser": true
     },
 	"globals": {
-		"d3":true
+		"d3":true,
+		"$":true
 	},
 	"extends": "airbnb",
 	"plugins": [
