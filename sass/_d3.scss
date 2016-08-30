@@ -1,5 +1,6 @@
 .container {
 	@include container;
+	padding-top: 24px;
 }
 
 .tag-cloud {
@@ -7,9 +8,26 @@
 	background-color: #71dad2;
 }
 
-.planet {
+.planet-container {
 	@include span(7 of 12);
-	background-color: #fae7b3;
+
+	.planet {
+		stroke: black;
+		stroke-opacity: 0.2;
+		fill: white;
+	}
+
+	.node {
+		fill: rgb(176, 196, 222);
+		stroke: #4682B4;
+		opacity: 0.8;
+	}
+
+	.node:hover {
+		fill: rgb(176, 196, 222);
+		stroke: #4682B4;
+		opacity: 1.0;
+	}
 }
 
 .thought {
@@ -25,7 +43,3 @@ p {
 .btn {
 	margin-bottom: 20px;
 }
-
-.nodetext { pointer-events: none; font: 10px sans-serif; }
-body { width:100%; height:100%; margin:none; padding:none; }
-.planet { width:500px;height:500px; border:3px solid black;border-radius:12px; margin:auto; }

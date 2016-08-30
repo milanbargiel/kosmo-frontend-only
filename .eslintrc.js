@@ -7,6 +7,9 @@ module.exports = {
 		"$":true
 	},
 	"extends": "airbnb",
+	"rules": {
+		"no-param-reassign": 0
+	},
 	"plugins": [
 	"react",
 	"jsx-a11y",
