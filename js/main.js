@@ -22,13 +22,19 @@ class Planet {
 
     this.force = d3.layout.force()
       .gravity(0.05)
-      .charge(-100)
+      .friction(0.9)
+      .charge(-50)
       .size([this.w, this.h]);
 
     this.nodes = this.force.nodes();
   }
 
   /* Methods */
+
+  revealThought(d) {
+    console.log(d.thought);
+    console.log(d.id);
+  }
 
   // Reference: http://stackoverflow.com/questions/8515900/how-to-constrain-movement-within-the-area-of-a-circle
   bindToCircle() {
@@ -52,14 +58,15 @@ class Planet {
   update() {
     /* Join selection to data array -> results in three new selections enter, update and exit */
     const circles = this.svg.selectAll('.node')
-      .data(this.nodes, d => d.id); // arrow function, function(d) { return d.y;}
+      .data(this.nodes, d => d.id); // joins are specified by d.id
 
     /* Add missing elements by calling append on enter selection */
     circles.enter()
       .append('circle')
       .attr('r', this.circleRadius)
       .attr('class', 'node')
-      .call(this.force.drag);
+      .on('click', (d) => { this.revealThought(d); });
+      // .call(this.force.drag);
 
     /* Remove surplus elements from exit selection */
     circles.exit()
@@ -76,17 +83,22 @@ class Planet {
     this.force.start();
   }
 
-  addThought(content) {
-    this.nodes.push({ id: content });
+  /* Placeholder function, later integrate shortid */
+  createRandomId() {
+    return Math.random().toFixed(20).slice(2);
+  }
+
+  addThought(text) {
+    this.nodes.push({ id: this.createRandomId(), thought: text });
     this.update();
   }
 
-  findThoughtIndex(content) {
-    return this.nodes.findIndex(node => node.id === content);
+  findThoughtIndex(id) {
+    return this.nodes.findIndex(node => node.id === id);
   }
 
-  removeThought(content) {
-    const index = this.findThoughtIndex(content);
+  removeThought(id) {
+    const index = this.findThoughtIndex(id);
     if (index !== -1) {
       this.nodes.splice(index, 1);
       this.update();
