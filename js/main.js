@@ -1,7 +1,9 @@
-// Reference: http://stackoverflow.com/questions/9539294/adding-new-nodes-to-force-directed-layout/9544595#9544595
-/* Define class */
+/* Class Definition
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+/* Reference: http://stackoverflow.com/questions/9539294/adding-new-nodes-to-force-directed-layout/9544595#9544595 */
 class Planet {
-  constructor(selector) {
+  constructor(selector, nodes) {
     this.w = $(selector).innerWidth();
     this.h = this.w;
     this.center = { x: (this.w / 2), y: (this.h / 2) };
@@ -14,29 +16,41 @@ class Planet {
       .attr('width', this.w)
       .attr('height', this.h);
 
+    /* Create svg circle as planet */
     this.planet = this.svg.append('circle')
       .attr('r', this.planetRadius)
       .attr('cx', this.w / 2)
       .attr('cy', this.w / 2)
-      .attr('class', 'planet');
+      .attr('class', 'planet')
+      .on('click', () => { this.clear(); });
 
+    /* Create d3 force layout */
     this.force = d3.layout.force()
       .gravity(0.05)
       .friction(0.9)
       .charge(-50)
       .size([this.w, this.h]);
 
-    this.nodes = this.force.nodes();
+    this.nodes = this.force.nodes();    // dataset
+    this.circles = null;                // holding dom elements
+
+    /* Insert existing data */
+    this.nodes.push(...nodes);
+    this.update();
+
+    /* See if url contains id already */
+    this.hashchange();
+
+    /* Call hashchange when url changes */
+    d3.select(window)
+      .on('hashchange', () => { this.hashchange(); }); // bind function to event
   }
 
-  /* Methods */
+/* Methods
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
 
-  revealThought(d) {
-    console.log(d.thought);
-    console.log(d.id);
-  }
-
-  // Reference: http://stackoverflow.com/questions/8515900/how-to-constrain-movement-within-the-area-of-a-circle
+  /* Reference: http://stackoverflow.com/questions/8515900/how-to-constrain-movement-within-the-area-of-a-circle */
+  /* Restrict elements to leave the svg circle planet */
   bindToCircle() {
     /* Returns a function which works on data of a single node */
     return (d) => {
@@ -57,24 +71,25 @@ class Planet {
 
   update() {
     /* Join selection to data array -> results in three new selections enter, update and exit */
-    const circles = this.svg.selectAll('.node')
-      .data(this.nodes, d => d.id); // joins are specified by d.id
+    this.circles = this.svg.selectAll('.node')
+      .data(this.nodes, d => d.id); // uniquely bind data to the node selection
 
     /* Add missing elements by calling append on enter selection */
-    circles.enter()
+    this.circles.enter()
       .append('circle')
       .attr('r', this.circleRadius)
       .attr('class', 'node')
-      .on('click', (d) => { this.revealThought(d); });
+      /* Bind connectEvents method to elements */
+      .call(d => { this.connectEvents(d); });
       // .call(this.force.drag);
 
     /* Remove surplus elements from exit selection */
-    circles.exit()
+    this.circles.exit()
       .remove();
 
     /* Draw circle: Set svg circle attributes to force updated values */
     this.force.on('tick', () => {
-      circles.each(this.bindToCircle())
+      this.circles.each(this.bindToCircle())
         .attr('cx', d => d.x)
         .attr('cy', d => d.y);
     });
@@ -83,7 +98,77 @@ class Planet {
     this.force.start();
   }
 
-  /* Placeholder function, later integrate shortid */
+/* Show content interactions
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+/**
+  * Reference: http://vallandingham.me/building_a_bubble_cloud.html
+  * When clicking on an object its id is pushed into the url.
+  * An eventlistener listens to changes in the url.
+  * On a change the thought view is updated.
+*/
+
+  connectEvents(d) {
+    d.on('click', (object) => this.click(object));
+    d.on('mouseover', (object) => this.mouseover(object));
+    d.on('mouseout', () => this.mouseout());
+  }
+
+  click(object) {
+    this.circles.classed('node-selected', d => object.id === d.id);
+    /* Save state of visualization -> push id into the url */
+    location.replace(`#${encodeURIComponent(object.id)}`);
+  }
+
+  mouseover(object) {
+    this.circles.classed('node-hover', d => object.id === d.id);
+    if (!this.isSelected()) {
+      this.updateThoughtView(object.id);
+    }
+  }
+
+  mouseout() {
+    this.circles.classed('node-hover', false);
+    if (!this.isSelected()) {
+      this.updateThoughtView('');
+    }
+  }
+  /* hashchange method is fired when url changes */
+  hashchange() {
+    const id = decodeURIComponent(location.hash.slice(1)).trim();
+    this.updateThoughtView(id);
+  }
+
+  updateThoughtView(id) {
+    /* If no thought is selected -> empty view */
+    if (!id) {
+      d3.select('.thought')
+        .text('');
+      return;
+    }
+    const i = this.findThoughtIndex(id);
+    const text = this.nodes[i].thought;
+    d3.select('.thought')
+      .text(text);
+  }
+
+  /* Click on svg planet triggers clear method */
+  clear() {
+    this.circles.classed('node-selected', false);
+    location.replace('#');
+  }
+
+  isSelected() {
+    if (decodeURIComponent(location.hash.slice(1)).trim()) {
+      return true;
+    }
+    return false;
+  }
+
+/* Add, remove
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+  /* Placeholder method, later integrate shortid */
   createRandomId() {
     return Math.random().toFixed(20).slice(2);
   }
@@ -98,16 +183,20 @@ class Planet {
   }
 
   removeThought(id) {
-    const index = this.findThoughtIndex(id);
-    if (index !== -1) {
-      this.nodes.splice(index, 1);
+    const i = this.findThoughtIndex(id);
+    if (i !== -1) {
+      this.nodes.splice(i, 1);
       this.update();
     }
   }
 }
 
-/* Instantiate class planet with selector and initial data*/
-const planet = new Planet('.planet-container');
-planet.addThought('Hallo');
-planet.addThought('Ballo');
-planet.addThought('Yallo');
+/* Instantiation of class with initial data
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+const nodes = [];
+nodes.push({ id: '223323', thought: 'Hallo Babacoush' });
+nodes.push({ id: '2233223', thought: 'Monsieur Coubertus' });
+nodes.push({ id: '22333', thought: 'Baba Janusch' });
+
+const planet = new Planet('.planet-container', nodes);

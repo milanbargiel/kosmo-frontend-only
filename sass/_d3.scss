@@ -23,10 +23,14 @@
 		opacity: 0.8;
 	}
 
-	.node:hover {
+	.node-hover {
 		fill: rgb(176, 196, 222);
 		stroke: #4682B4;
 		opacity: 1.0;
+	}
+
+	.node-selected {
+		fill: black;
 	}
 }
 

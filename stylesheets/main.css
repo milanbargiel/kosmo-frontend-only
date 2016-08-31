@@ -119,10 +119,13 @@ body {
   stroke: #4682B4;
   opacity: 0.8;
 }
-.planet-container .node:hover {
+.planet-container .node-hover {
   fill: lightsteelblue;
   stroke: #4682B4;
   opacity: 1.0;
+}
+.planet-container .node-selected {
+  fill: black;
 }
 
 .thought {
