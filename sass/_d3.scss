@@ -5,7 +5,6 @@
 
 .tag-cloud {
 	@include span(2 of 12);
-	background-color: #71dad2;
 }
 
 .planet-container {
@@ -46,4 +45,10 @@ p {
 
 .btn {
 	margin-bottom: 20px;
+}
+
+.tags {
+	li {
+		margin-bottom: 8px;
+	}
 }

@@ -84,7 +84,7 @@ body {
 }
 
 .container {
-  width: 120rem;
+  max-width: 120rem;
   margin-left: auto;
   margin-right: auto;
   padding-top: 24px;
@@ -96,18 +96,17 @@ body {
 }
 
 .tag-cloud {
-  width: 16rem;
+  width: 13.33333%;
   float: left;
-  margin-left: 2rem;
-  margin-right: 2rem;
-  background-color: #71dad2;
+  margin-left: 1.66667%;
+  margin-right: 1.66667%;
 }
 
 .planet-container {
-  width: 66rem;
+  width: 55%;
   float: left;
-  margin-left: 2rem;
-  margin-right: 2rem;
+  margin-left: 1.66667%;
+  margin-right: 1.66667%;
 }
 .planet-container .planet {
   stroke: black;
@@ -129,10 +128,10 @@ body {
 }
 
 .thought {
-  width: 26rem;
+  width: 21.66667%;
   float: right;
-  margin-left: 2rem;
-  margin-right: 2rem;
+  margin-left: 1.66667%;
+  margin-right: 1.66667%;
   background-color: #ee9e9c;
   text-align: center;
 }
@@ -143,4 +142,8 @@ p {
 
 .btn {
   margin-bottom: 20px;
+}
+
+.tags li {
+  margin-bottom: 8px;
 }

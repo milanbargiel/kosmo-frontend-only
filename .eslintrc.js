@@ -4,11 +4,13 @@ module.exports = {
     },
 	"globals": {
 		"d3":true,
-		"$":true	
+		"$":true,
+		"contents": true	
 	},
 	"extends": "airbnb",
 	"rules": {
-		"no-param-reassign": 0
+		"no-param-reassign": 0,
+		"no-use-before-define": ["error", { "functions": false, "classes": true }]
 	},
 	"plugins": [
 	"react",
