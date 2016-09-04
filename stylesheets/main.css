@@ -124,7 +124,7 @@ body {
   opacity: 1.0;
 }
 .planet-container .node-selected {
-  fill: black;
+  fill: #21c0ff;
 }
 
 .thought {

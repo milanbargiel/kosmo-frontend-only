@@ -5,7 +5,7 @@ module.exports = {
 	"globals": {
 		"d3":true,
 		"$":true,
-		"contents": true	
+		"contents": true
 	},
 	"extends": "airbnb",
 	"rules": {

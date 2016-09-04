@@ -126,13 +126,14 @@ function Planet(selector, dataset) {
 */
 
   function click(object) { // object is selected nodes object
-    circles.classed('node-selected', d => object.id === d.id);
+    /* iterates over nodes, if callback returns true, class is given */
+    circles.classed('node-selected', node => object.id === node.id);
     /* Save state of visualization -> push id into the url */
     location.replace(`#${encodeURIComponent(object.id)}`);
   }
 
   function mouseover(object) {
-    circles.classed('node-hover', d => object.id === d.id);
+    circles.classed('node-hover', node => object.id === node.id);
     if (!isSelected()) {
       content.show(object);
     }
@@ -180,6 +181,20 @@ function Planet(selector, dataset) {
     return false;
   }
 
+  /* return an array of node ids which contain specified tag */
+  function findNodeIds(tag) {
+    /* narrow down array. if return is true item is kept */
+    const ids = nodes.filter(node => node.tags.includes(tag));
+    /* make an array of ids only */
+    return ids.map(node => node.id);
+  }
+
+  this.highlightNodes = tag => {
+    const ids = findNodeIds(tag);
+    /* assign class to all elements with specified ids */
+    circles.classed('node-selected', node => ids.includes(node.id));
+  };
+
 /* Add, remove
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 
@@ -193,12 +208,12 @@ function Planet(selector, dataset) {
   }
 
   /* Methods - accessible from outside the function */
-  this.addNode = (text) => {
+  this.addNode = text => {
     nodes.push({ id: createRandomId(), thought: text });
     update();
   };
 
-  this.removeNode = (id) => {
+  this.removeNode = id => {
     const i = findNodeIndex(id);
     if (i !== -1) {
       nodes.splice(i, 1);
@@ -211,9 +226,41 @@ function Planet(selector, dataset) {
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 
 const dataset = [];
-dataset.push({ id: '223323', thought: 'Hallo Babacoush' });
-dataset.push({ id: '2233223', thought: 'Monsieur Coubertus' });
-dataset.push({ id: '22333', thought: 'Baba Janusch' });
-
+dataset.push({
+  id: '22333',
+  thought: 'I had a dream about an green elephant. It asked me to travel on his back to India. When I accepted his offer he laughed at me and said that I am much to heavy. The elephant would rather go alone. #dream #elephant',
+  tags: ['#dream', '#elephant'],
+});
+dataset.push({
+  id: '222333',
+  thought: 'He told students to get their diplomas and shared his dream of escape. #freddiegray #dream',
+  tags: ['#freddiegray', '#dream'],
+});
+dataset.push({
+  id: '2223333',
+  thought: 'But they did not see any #trump Home mirrors or lotion dispensers',
+  tags: ['#trump'],
+});
+dataset.push({
+  id: '22233333',
+  thought: 'When Jobs returned, it was a dark time for Apple. It was forced to team up with its archrival Microsoft, and even took a $150 million stock investment from the company, which was then run by Bill Gates. #elephant #dream',
+  tags: ['#elephant', '#dream'],
+});
 /* Instantiate object with new */
 const planet = new Planet('.planet-container', dataset);
+
+/* Tags
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+/* Add click event listener on tags. Click on a tag -> highlight tagged nodes */
+function setupTags() {
+  d3.select('.tag-cloud')
+    .selectAll('.tag')
+    .on('click', function () { // use normal function so 'this' is dom element
+      /* Get tag name */
+      const tag = d3.select(this).text();
+      planet.highlightNodes(tag);
+    });
+}
+
+setupTags();
