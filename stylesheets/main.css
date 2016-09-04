@@ -127,6 +127,24 @@ body {
   fill: #21c0ff;
 }
 
+.planet {
+  stroke: black;
+  stroke-opacity: 0.2;
+  fill: white;
+}
+
+.planet-hover {
+  stroke: black;
+  stroke-opacity: 0.8;
+  fill: white;
+}
+
+.planet-selected {
+  stroke: #21C0FF;
+  stroke-opacity: 0.8;
+  fill: white;
+}
+
 .thought {
   width: 21.66667%;
   float: right;
