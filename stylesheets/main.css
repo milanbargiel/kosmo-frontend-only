@@ -134,6 +134,16 @@ body {
 
 .menu {
   position: absolute;
+  opacity: 0;
+}
+
+.menu-hover {
+  opacity: 1;
+}
+
+.menu-selected {
+  opacity: 1;
+  color: #21c0ff;
 }
 
 .planet {

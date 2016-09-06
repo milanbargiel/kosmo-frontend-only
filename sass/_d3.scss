@@ -40,6 +40,16 @@
 
 .menu {
 	position: absolute;
+	opacity: 0;
+}
+
+.menu-hover {
+	opacity: 1;
+}
+
+.menu-selected {
+	opacity: 1;
+	color: rgb(33, 192, 255);
 }
 
 .planet {

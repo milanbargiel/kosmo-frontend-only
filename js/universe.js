@@ -9,6 +9,7 @@
 function Universe(selector, dataset) {
   let w = $(selector).innerWidth();
   let h = $(document).height(); // h is equal to height of HTML document
+  const marginCircleMenu = 24;  // distance between menu and planet (tick function)
   const circleRadius = 50;
 
   /* Create svg container to hold the visualization */
@@ -84,6 +85,13 @@ function Universe(selector, dataset) {
       .append('div')
       .attr('class', 'menu')
       .text(d => d.name)
+      /* Add dx (half width of menu div) and dy property (height of menu div) to each node object */
+      /* Use values to center and position menu div on circle in tick function */
+      .each(function setMeasures(d) { // use function so this refers to dom element
+        const elemMeasures = this.getBoundingClientRect();
+        d.dx = elemMeasures.width / 2;
+        d.dy = elemMeasures.height;
+      })
       .call(force.drag);
 
     labels.exit()
@@ -102,8 +110,11 @@ function Universe(selector, dataset) {
         .attr('cy', d => d.y);
 
       /* Html elements with position absolute */
-      labels.style('left', d => `${d.x}px`)
-        .style('top', d => `${d.y}px`);
+      labels
+        /* Center menu: d.x - half menu width */
+        .style('left', d => `${d.x - d.dx}px`)
+        /* Position menu vertically */
+        .style('top', d => `${d.y - d.dy - circleRadius - marginCircleMenu}px`);
     });
 
     /* Restart the force layout */
@@ -123,24 +134,28 @@ function Universe(selector, dataset) {
 
 /* Interactions
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-/* Reference: http://vallandingham.me/building_a_bubble_cloud.html */
 
+  /* Reference: http://vallandingham.me/building_a_bubble_cloud.html */
   function click(object) { // object is selected nodes object
     /* iterates over nodes, if callback returns true, class is given */
     circles.classed('planet-selected', node => object.id === node.id);
+    labels.classed('menu-selected', node => object.id === node.id);
   }
 
   function mouseover(object) {
     circles.classed('planet-hover', node => object.id === node.id);
+    labels.classed('menu-hover', node => object.id === node.id);
   }
 
   function mouseout() {
     circles.classed('planet-hover', false);
+    labels.classed('menu-hover', false);
   }
 
   /* Click on background rect triggers clear function */
   function clear() {
     circles.classed('planet-selected', false);
+    labels.classed('menu-selected', false);
   }
 
   function connectEvents(selection) {
