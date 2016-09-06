@@ -40,14 +40,25 @@
 
 .menu {
 	position: absolute;
+}
+
+.menu__header {
 	opacity: 0;
 }
 
-.menu-hover {
+.menu__navigation {
+	display: none;
+}
+
+.show {
+	display: block;
+}
+
+.active {
 	opacity: 1;
 }
 
-.menu-selected {
+.selected {
 	opacity: 1;
 	color: rgb(33, 192, 255);
 }

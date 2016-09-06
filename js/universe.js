@@ -81,18 +81,26 @@ function Universe(selector, dataset) {
     labels = menuContainer.selectAll('.menu')
       .data(nodes, d => d.id); // uniquely bind data to the node selection
 
-    labels.enter()
+    const labelsEnter = labels.enter()
       .append('div')
-      .attr('class', 'menu')
+      .attr('class', 'menu');
+
+    labelsEnter.append('a')
+      .attr('class', 'menu__header')
       .text(d => d.name)
       /* Add dx (half width of menu div) and dy property (height of menu div) to each node object */
       /* Use values to center and position menu div on circle in tick function */
-      .each(function setMeasures(d) { // use function so this refers to dom element
+      .each(function setMeasures(d) { // use function so this refers to dom element (menu__header)
         const elemMeasures = this.getBoundingClientRect();
         d.dx = elemMeasures.width / 2;
         d.dy = elemMeasures.height;
-      })
-      .call(force.drag);
+      });
+
+    /* Create Menu Navigation */
+    const menuNavigation = '<li>ENTER</li><li>Rename</li><li>Delete</li>';
+    labelsEnter.append('ul')
+      .attr('class', 'menu__navigation')
+      .html(menuNavigation);
 
     labels.exit()
       .remove();
@@ -139,23 +147,23 @@ function Universe(selector, dataset) {
   function click(object) { // object is selected nodes object
     /* iterates over nodes, if callback returns true, class is given */
     circles.classed('planet-selected', node => object.id === node.id);
-    labels.classed('menu-selected', node => object.id === node.id);
+    labels.selectAll('.menu__header').classed('selected', node => object.id === node.id);
   }
 
   function mouseover(object) {
     circles.classed('planet-hover', node => object.id === node.id);
-    labels.classed('menu-hover', node => object.id === node.id);
+    labels.selectAll('.menu__header').classed('active', node => object.id === node.id);
   }
 
   function mouseout() {
     circles.classed('planet-hover', false);
-    labels.classed('menu-hover', false);
+    labels.selectAll('.menu__header').classed('active', false);
   }
 
   /* Click on background rect triggers clear function */
   function clear() {
     circles.classed('planet-selected', false);
-    labels.classed('menu-selected', false);
+    labels.selectAll('.menu__header').classed('selected', false);
   }
 
   function connectEvents(selection) {
