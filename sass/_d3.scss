@@ -33,6 +33,15 @@
 	}
 }
 
+.universe-container {
+	position: relative;
+	overflow: hidden;
+}
+
+.menu {
+	position: absolute;
+}
+
 .planet {
 	stroke: black;
 	stroke-opacity: 0.2;

@@ -17,6 +17,11 @@ function Universe(selector, dataset) {
       .attr('width', w)
       .attr('height', h);
 
+  /* Create div container to hold menus */
+  const menuContainer = d3.select(selector)
+    .append('div')
+    .attr('class', 'menu-container');
+
   /* Clickable background rect to clear the current selection */
   const backgroundRect = svg.append('rect')
     .attr('width', w)
@@ -31,6 +36,7 @@ function Universe(selector, dataset) {
     .size([w, h]);
 
   const nodes = force.nodes();  // force dataset
+  let labels = null;            // holding menus of nodes
   let circles = null;           // holding dom elements
 
   /* Insert existing data */
@@ -40,7 +46,7 @@ function Universe(selector, dataset) {
 /* Functions
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 
-/* Reference: http://bl.ocks.org/mbostock/1129492 */
+  /* Reference: http://bl.ocks.org/mbostock/1129492 */
   function bindToRectangle() {
     /* Returns a function which works on data of a single node */
     return (d) => {
@@ -49,7 +55,8 @@ function Universe(selector, dataset) {
     };
   }
 
-  function update() {
+  /* Reference: http://vallandingham.me/building_a_bubble_cloud.html */
+  function updateNodes() {
     /* Join selection to data array -> results in three new selections enter, update and exit */
     circles = svg.selectAll('.planet')
       .data(nodes, d => d.id); // uniquely bind data to the node selection
@@ -66,12 +73,37 @@ function Universe(selector, dataset) {
     /* Remove surplus elements from exit selection */
     circles.exit()
       .remove();
+  }
 
-    /* Draw circle: Set svg circle attributes to force updated values */
+  function updateLabels() {
+    /* Join selection to data array -> results in three new selections enter, update and exit */
+    labels = menuContainer.selectAll('.menu')
+      .data(nodes, d => d.id); // uniquely bind data to the node selection
+
+    labels.enter()
+      .append('div')
+      .attr('class', 'menu')
+      .text(d => d.name)
+      .call(force.drag);
+
+    labels.exit()
+      .remove();
+  }
+
+  function update() {
+    /* Update nodes and their menus */
+    updateNodes();
+    updateLabels();
+
+    /* Draw circle: Set svg circle and html element attributes to force updated values */
     force.on('tick', () => {
       circles.each(bindToRectangle())
         .attr('cx', d => d.x)
         .attr('cy', d => d.y);
+
+      /* Html elements with position absolute */
+      labels.style('left', d => `${d.x}px`)
+        .style('top', d => `${d.y}px`);
     });
 
     /* Restart the force layout */
@@ -95,7 +127,6 @@ function Universe(selector, dataset) {
 
   function click(object) { // object is selected nodes object
     /* iterates over nodes, if callback returns true, class is given */
-    console.log(object);
     circles.classed('planet-selected', node => object.id === node.id);
   }
 
@@ -113,7 +144,7 @@ function Universe(selector, dataset) {
   }
 
   function connectEvents(selection) {
-    selection.on('click', click);
+    selection.on('mousedown', click);
     selection.on('mouseover', mouseover);
     selection.on('mouseout', mouseout);
   }

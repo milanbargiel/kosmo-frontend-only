@@ -1,3 +1,7 @@
+/* contents function
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+/* Show and hide object property (thought) in specified container */
+
 function contents(selector) {
   const container = d3.select(selector);
 
